@@ -1,0 +1,1114 @@
+ARM GAS  /tmp/ccL2ZM5z.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 1
+   4              		.eabi_attribute 28, 1
+   5              		.fpu fpv4-sp-d16
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.thumb
+  16              		.syntax unified
+  17              		.file	"internal_sensors.c"
+  18              		.text
+  19              	.Ltext0:
+  20              		.cfi_sections	.debug_frame
+  21              		.section	.text.initGyroscope,"ax",%progbits
+  22              		.align	2
+  23              		.global	initGyroscope
+  24              		.thumb
+  25              		.thumb_func
+  27              	initGyroscope:
+  28              	.LFB129:
+  29              		.file 1 "Src/internal_sensors.c"
+   1:Src/internal_sensors.c **** #include "cmsis_os.h"
+   2:Src/internal_sensors.c **** #include "gpio.h"
+   3:Src/internal_sensors.c **** #include "internal_sensors.h"
+   4:Src/internal_sensors.c **** 
+   5:Src/internal_sensors.c **** float mdps_per_digit = 8.75;
+   6:Src/internal_sensors.c **** 
+   7:Src/internal_sensors.c **** I2C_HandleTypeDef hi2c1;
+   8:Src/internal_sensors.c **** SPI_HandleTypeDef hspi1;
+   9:Src/internal_sensors.c **** 
+  10:Src/internal_sensors.c **** void initGyroscope(void){
+  30              		.loc 1 10 0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 8
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34 0000 30B5     		push	{r4, r5, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 12
+  37              		.cfi_offset 4, -12
+  38              		.cfi_offset 5, -8
+  39              		.cfi_offset 14, -4
+  40 0002 83B0     		sub	sp, sp, #12
+  41              	.LCFI1:
+  42              		.cfi_def_cfa_offset 24
+  11:Src/internal_sensors.c **** 	uint8_t data_ctrl1, address_ctrl1;
+  12:Src/internal_sensors.c **** 
+  13:Src/internal_sensors.c **** 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
+  43              		.loc 1 13 0
+  44 0004 0F4C     		ldr	r4, .L3
+  45 0006 0022     		movs	r2, #0
+ARM GAS  /tmp/ccL2ZM5z.s 			page 2
+
+
+  46 0008 0821     		movs	r1, #8
+  47 000a 2046     		mov	r0, r4
+  48 000c FFF7FEFF 		bl	HAL_GPIO_WritePin
+  49              	.LVL0:
+  14:Src/internal_sensors.c **** 	address_ctrl1 = 0x20;
+  50              		.loc 1 14 0
+  51 0010 02A9     		add	r1, sp, #8
+  52 0012 2023     		movs	r3, #32
+  53 0014 01F8023D 		strb	r3, [r1, #-2]!
+  15:Src/internal_sensors.c **** 	HAL_SPI_Transmit(&hspi1, &address_ctrl1, 1, 50);
+  54              		.loc 1 15 0
+  55 0018 0B4D     		ldr	r5, .L3+4
+  56 001a 3223     		movs	r3, #50
+  57 001c 0122     		movs	r2, #1
+  58 001e 2846     		mov	r0, r5
+  59 0020 FFF7FEFF 		bl	HAL_SPI_Transmit
+  60              	.LVL1:
+  16:Src/internal_sensors.c **** 	data_ctrl1 = 0xcf;
+  61              		.loc 1 16 0
+  62 0024 02A9     		add	r1, sp, #8
+  63 0026 CF23     		movs	r3, #207
+  64 0028 01F8013D 		strb	r3, [r1, #-1]!
+  17:Src/internal_sensors.c **** 	HAL_SPI_Transmit(&hspi1, &data_ctrl1, 1, 50);
+  65              		.loc 1 17 0
+  66 002c 3223     		movs	r3, #50
+  67 002e 0122     		movs	r2, #1
+  68 0030 2846     		mov	r0, r5
+  69 0032 FFF7FEFF 		bl	HAL_SPI_Transmit
+  70              	.LVL2:
+  18:Src/internal_sensors.c **** 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
+  71              		.loc 1 18 0
+  72 0036 0122     		movs	r2, #1
+  73 0038 0821     		movs	r1, #8
+  74 003a 2046     		mov	r0, r4
+  75 003c FFF7FEFF 		bl	HAL_GPIO_WritePin
+  76              	.LVL3:
+  19:Src/internal_sensors.c **** }
+  77              		.loc 1 19 0
+  78 0040 03B0     		add	sp, sp, #12
+  79              	.LCFI2:
+  80              		.cfi_def_cfa_offset 12
+  81              		@ sp needed
+  82 0042 30BD     		pop	{r4, r5, pc}
+  83              	.L4:
+  84              		.align	2
+  85              	.L3:
+  86 0044 00100048 		.word	1207963648
+  87 0048 00000000 		.word	hspi1
+  88              		.cfi_endproc
+  89              	.LFE129:
+  91              		.section	.text.initAccelerometer,"ax",%progbits
+  92              		.align	2
+  93              		.global	initAccelerometer
+  94              		.thumb
+  95              		.thumb_func
+  97              	initAccelerometer:
+  98              	.LFB130:
+ARM GAS  /tmp/ccL2ZM5z.s 			page 3
+
+
+  20:Src/internal_sensors.c **** void initAccelerometer(void){
+  99              		.loc 1 20 0
+ 100              		.cfi_startproc
+ 101              		@ args = 0, pretend = 0, frame = 8
+ 102              		@ frame_needed = 0, uses_anonymous_args = 0
+ 103 0000 10B5     		push	{r4, lr}
+ 104              	.LCFI3:
+ 105              		.cfi_def_cfa_offset 8
+ 106              		.cfi_offset 4, -8
+ 107              		.cfi_offset 14, -4
+ 108 0002 84B0     		sub	sp, sp, #16
+ 109              	.LCFI4:
+ 110              		.cfi_def_cfa_offset 24
+ 111              	.LVL4:
+  21:Src/internal_sensors.c **** 	uint8_t accel_address = 0x32;
+  22:Src/internal_sensors.c **** 	uint8_t accel_reg, accel_val;
+  23:Src/internal_sensors.c **** 
+  24:Src/internal_sensors.c **** 
+  25:Src/internal_sensors.c **** 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
+ 112              		.loc 1 25 0
+ 113 0004 0C4C     		ldr	r4, .L7
+ 114 0006 0122     		movs	r2, #1
+ 115 0008 0821     		movs	r1, #8
+ 116 000a 2046     		mov	r0, r4
+ 117 000c FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 118              	.LVL5:
+  26:Src/internal_sensors.c **** 	accel_reg=0x20;
+  27:Src/internal_sensors.c **** 	accel_val=0x57;		//0x67 for 100Hz	0x97 for 800Hz (as before)
+  28:Src/internal_sensors.c **** 	uint8_t cmd[] = {accel_reg, accel_val};
+ 119              		.loc 1 28 0
+ 120 0010 2023     		movs	r3, #32
+ 121 0012 8DF80C30 		strb	r3, [sp, #12]
+ 122 0016 5723     		movs	r3, #87
+ 123 0018 8DF80D30 		strb	r3, [sp, #13]
+  29:Src/internal_sensors.c **** 	HAL_I2C_Master_Transmit(&hi2c1, accel_address, cmd, 2, 50);
+ 124              		.loc 1 29 0
+ 125 001c 3221     		movs	r1, #50
+ 126 001e 0091     		str	r1, [sp]
+ 127 0020 0223     		movs	r3, #2
+ 128 0022 03AA     		add	r2, sp, #12
+ 129 0024 0548     		ldr	r0, .L7+4
+ 130 0026 FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 131              	.LVL6:
+  30:Src/internal_sensors.c **** 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
+ 132              		.loc 1 30 0
+ 133 002a 0022     		movs	r2, #0
+ 134 002c 0821     		movs	r1, #8
+ 135 002e 2046     		mov	r0, r4
+ 136 0030 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 137              	.LVL7:
+  31:Src/internal_sensors.c **** }
+ 138              		.loc 1 31 0
+ 139 0034 04B0     		add	sp, sp, #16
+ 140              	.LCFI5:
+ 141              		.cfi_def_cfa_offset 8
+ 142              		@ sp needed
+ 143 0036 10BD     		pop	{r4, pc}
+ARM GAS  /tmp/ccL2ZM5z.s 			page 4
+
+
+ 144              	.L8:
+ 145              		.align	2
+ 146              	.L7:
+ 147 0038 00100048 		.word	1207963648
+ 148 003c 00000000 		.word	hi2c1
+ 149              		.cfi_endproc
+ 150              	.LFE130:
+ 152              		.section	.text.initMagnetometer,"ax",%progbits
+ 153              		.align	2
+ 154              		.global	initMagnetometer
+ 155              		.thumb
+ 156              		.thumb_func
+ 158              	initMagnetometer:
+ 159              	.LFB131:
+  32:Src/internal_sensors.c **** void initMagnetometer(void){
+ 160              		.loc 1 32 0
+ 161              		.cfi_startproc
+ 162              		@ args = 0, pretend = 0, frame = 8
+ 163              		@ frame_needed = 0, uses_anonymous_args = 0
+ 164 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+ 165              	.LCFI6:
+ 166              		.cfi_def_cfa_offset 20
+ 167              		.cfi_offset 4, -20
+ 168              		.cfi_offset 5, -16
+ 169              		.cfi_offset 6, -12
+ 170              		.cfi_offset 7, -8
+ 171              		.cfi_offset 14, -4
+ 172 0002 85B0     		sub	sp, sp, #20
+ 173              	.LCFI7:
+ 174              		.cfi_def_cfa_offset 40
+ 175              	.LVL8:
+  33:Src/internal_sensors.c **** 	uint8_t magn_address = 0x3c;
+  34:Src/internal_sensors.c **** 	uint8_t magn_reg, magn_val;
+  35:Src/internal_sensors.c **** 
+  36:Src/internal_sensors.c **** 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
+ 176              		.loc 1 36 0
+ 177 0004 134D     		ldr	r5, .L11
+ 178 0006 0122     		movs	r2, #1
+ 179 0008 0821     		movs	r1, #8
+ 180 000a 2846     		mov	r0, r5
+ 181 000c FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 182              	.LVL9:
+  37:Src/internal_sensors.c **** 	magn_reg=0x00;
+  38:Src/internal_sensors.c **** 	magn_val=0x1c;
+  39:Src/internal_sensors.c **** 	uint8_t cmd[] = {magn_reg, magn_val};
+ 183              		.loc 1 39 0
+ 184 0010 0024     		movs	r4, #0
+ 185 0012 8DF80C40 		strb	r4, [sp, #12]
+ 186 0016 1C23     		movs	r3, #28
+ 187 0018 8DF80D30 		strb	r3, [sp, #13]
+  40:Src/internal_sensors.c **** 
+  41:Src/internal_sensors.c **** 	HAL_I2C_Master_Transmit(&hi2c1, magn_address, cmd, 2, 50);
+ 188              		.loc 1 41 0
+ 189 001c 0E4E     		ldr	r6, .L11+4
+ 190 001e 3227     		movs	r7, #50
+ 191 0020 0097     		str	r7, [sp]
+ 192 0022 0223     		movs	r3, #2
+ARM GAS  /tmp/ccL2ZM5z.s 			page 5
+
+
+ 193 0024 03AA     		add	r2, sp, #12
+ 194 0026 3C21     		movs	r1, #60
+ 195 0028 3046     		mov	r0, r6
+ 196 002a FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 197              	.LVL10:
+  42:Src/internal_sensors.c **** 	magn_reg=0x02;
+  43:Src/internal_sensors.c **** 	magn_val=0x00;
+  44:Src/internal_sensors.c **** 	cmd[0] = magn_reg;
+ 198              		.loc 1 44 0
+ 199 002e 0223     		movs	r3, #2
+ 200 0030 8DF80C30 		strb	r3, [sp, #12]
+  45:Src/internal_sensors.c **** 	cmd[1] = magn_val;
+ 201              		.loc 1 45 0
+ 202 0034 8DF80D40 		strb	r4, [sp, #13]
+  46:Src/internal_sensors.c **** 	HAL_I2C_Master_Transmit(&hi2c1, magn_address, cmd, 2, 50);
+ 203              		.loc 1 46 0
+ 204 0038 0097     		str	r7, [sp]
+ 205 003a 03AA     		add	r2, sp, #12
+ 206 003c 3C21     		movs	r1, #60
+ 207 003e 3046     		mov	r0, r6
+ 208 0040 FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 209              	.LVL11:
+  47:Src/internal_sensors.c **** 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
+ 210              		.loc 1 47 0
+ 211 0044 2246     		mov	r2, r4
+ 212 0046 0821     		movs	r1, #8
+ 213 0048 2846     		mov	r0, r5
+ 214 004a FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 215              	.LVL12:
+  48:Src/internal_sensors.c **** 
+  49:Src/internal_sensors.c **** }
+ 216              		.loc 1 49 0
+ 217 004e 05B0     		add	sp, sp, #20
+ 218              	.LCFI8:
+ 219              		.cfi_def_cfa_offset 20
+ 220              		@ sp needed
+ 221 0050 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 222              	.L12:
+ 223 0052 00BF     		.align	2
+ 224              	.L11:
+ 225 0054 00100048 		.word	1207963648
+ 226 0058 00000000 		.word	hi2c1
+ 227              		.cfi_endproc
+ 228              	.LFE131:
+ 230              		.section	.text.readGyroscope,"ax",%progbits
+ 231              		.align	2
+ 232              		.global	readGyroscope
+ 233              		.thumb
+ 234              		.thumb_func
+ 236              	readGyroscope:
+ 237              	.LFB132:
+  50:Src/internal_sensors.c **** 
+  51:Src/internal_sensors.c **** uint8_t readGyroscope(float* data){
+ 238              		.loc 1 51 0
+ 239              		.cfi_startproc
+ 240              		@ args = 0, pretend = 0, frame = 16
+ 241              		@ frame_needed = 0, uses_anonymous_args = 0
+ARM GAS  /tmp/ccL2ZM5z.s 			page 6
+
+
+ 242              	.LVL13:
+ 243 0000 70B5     		push	{r4, r5, r6, lr}
+ 244              	.LCFI9:
+ 245              		.cfi_def_cfa_offset 16
+ 246              		.cfi_offset 4, -16
+ 247              		.cfi_offset 5, -12
+ 248              		.cfi_offset 6, -8
+ 249              		.cfi_offset 14, -4
+ 250 0002 84B0     		sub	sp, sp, #16
+ 251              	.LCFI10:
+ 252              		.cfi_def_cfa_offset 32
+ 253 0004 0446     		mov	r4, r0
+  52:Src/internal_sensors.c **** 	uint8_t address_out;
+  53:Src/internal_sensors.c **** 	uint8_t rxbuf[8];
+  54:Src/internal_sensors.c **** 	int16_t xgyro, ygyro, zgyro;
+  55:Src/internal_sensors.c **** 
+  56:Src/internal_sensors.c **** 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
+ 254              		.loc 1 56 0
+ 255 0006 2F4D     		ldr	r5, .L16
+ 256 0008 0022     		movs	r2, #0
+ 257 000a 0821     		movs	r1, #8
+ 258 000c 2846     		mov	r0, r5
+ 259              	.LVL14:
+ 260 000e FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 261              	.LVL15:
+  57:Src/internal_sensors.c **** 	address_out = 0xc0 | 0x27;      // MSB high: read mode
+ 262              		.loc 1 57 0
+ 263 0012 04A9     		add	r1, sp, #16
+ 264 0014 E723     		movs	r3, #231
+ 265 0016 01F8013D 		strb	r3, [r1, #-1]!
+  58:Src/internal_sensors.c **** 	HAL_SPI_Transmit(&hspi1, &address_out, 1, 50);
+ 266              		.loc 1 58 0
+ 267 001a 2B4E     		ldr	r6, .L16+4
+ 268 001c 3223     		movs	r3, #50
+ 269 001e 0122     		movs	r2, #1
+ 270 0020 3046     		mov	r0, r6
+ 271 0022 FFF7FEFF 		bl	HAL_SPI_Transmit
+ 272              	.LVL16:
+  59:Src/internal_sensors.c **** 	HAL_SPI_Receive(&hspi1, rxbuf, 8, 50);
+ 273              		.loc 1 59 0
+ 274 0026 3223     		movs	r3, #50
+ 275 0028 0822     		movs	r2, #8
+ 276 002a 01A9     		add	r1, sp, #4
+ 277 002c 3046     		mov	r0, r6
+ 278 002e FFF7FEFF 		bl	HAL_SPI_Receive
+ 279              	.LVL17:
+  60:Src/internal_sensors.c **** 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
+ 280              		.loc 1 60 0
+ 281 0032 0122     		movs	r2, #1
+ 282 0034 0821     		movs	r1, #8
+ 283 0036 2846     		mov	r0, r5
+ 284 0038 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 285              	.LVL18:
+  61:Src/internal_sensors.c **** 
+  62:Src/internal_sensors.c **** 	if (rxbuf[1] & 0x8) {
+ 286              		.loc 1 62 0
+ 287 003c 9DF80530 		ldrb	r3, [sp, #5]	@ zero_extendqisi2
+ARM GAS  /tmp/ccL2ZM5z.s 			page 7
+
+
+ 288 0040 03F00803 		and	r3, r3, #8
+ 289 0044 03F0FF00 		and	r0, r3, #255
+ 290 0048 D3B3     		cbz	r3, .L14
+  63:Src/internal_sensors.c **** 		xgyro = (rxbuf[3] << 8) | rxbuf[2];
+ 291              		.loc 1 63 0
+ 292 004a 9DF80720 		ldrb	r2, [sp, #7]	@ zero_extendqisi2
+ 293 004e 9DF80630 		ldrb	r3, [sp, #6]	@ zero_extendqisi2
+ 294 0052 43EA0223 		orr	r3, r3, r2, lsl #8
+ 295 0056 1BB2     		sxth	r3, r3
+ 296 0058 07EE103A 		vmov	s14, r3	@ int
+ 297              	.LVL19:
+  64:Src/internal_sensors.c **** 		ygyro = (rxbuf[5] << 8) | rxbuf[4];
+ 298              		.loc 1 64 0
+ 299 005c 9DF80920 		ldrb	r2, [sp, #9]	@ zero_extendqisi2
+ 300 0060 9DF80830 		ldrb	r3, [sp, #8]	@ zero_extendqisi2
+ 301              	.LVL20:
+ 302 0064 43EA0223 		orr	r3, r3, r2, lsl #8
+ 303 0068 1BB2     		sxth	r3, r3
+ 304 006a 07EE903A 		vmov	s15, r3	@ int
+ 305              	.LVL21:
+  65:Src/internal_sensors.c **** 		zgyro = (rxbuf[7] << 8) | rxbuf[6];
+ 306              		.loc 1 65 0
+ 307 006e 9DF80B20 		ldrb	r2, [sp, #11]	@ zero_extendqisi2
+ 308 0072 9DF80A30 		ldrb	r3, [sp, #10]	@ zero_extendqisi2
+ 309              	.LVL22:
+ 310 0076 43EA0223 		orr	r3, r3, r2, lsl #8
+ 311 007a 1BB2     		sxth	r3, r3
+ 312              	.LVL23:
+  66:Src/internal_sensors.c **** 		data[0] = (((float)xgyro) * mdps_per_digit)/1000.0;
+ 313              		.loc 1 66 0
+ 314 007c B8EEC77A 		vcvt.f32.s32	s14, s14
+ 315              	.LVL24:
+ 316 0080 124A     		ldr	r2, .L16+8
+ 317 0082 D2ED006A 		vldr.32	s13, [r2]
+ 318 0086 27EE267A 		vmul.f32	s14, s14, s13
+ 319 008a DFED116A 		vldr.32	s13, .L16+12
+ 320 008e 87EE266A 		vdiv.f32	s12, s14, s13
+ 321 0092 84ED006A 		vstr.32	s12, [r4]
+ 322              	.LVL25:
+  67:Src/internal_sensors.c **** 		data[1] = (((float)ygyro) * mdps_per_digit)/1000.0;
+ 323              		.loc 1 67 0
+ 324 0096 F8EEE77A 		vcvt.f32.s32	s15, s15
+ 325              	.LVL26:
+ 326 009a 92ED007A 		vldr.32	s14, [r2]
+ 327 009e 67EE877A 		vmul.f32	s15, s15, s14
+ 328 00a2 87EEA66A 		vdiv.f32	s12, s15, s13
+ 329 00a6 84ED016A 		vstr.32	s12, [r4, #4]
+  68:Src/internal_sensors.c **** 		data[2] = (((float)zgyro) * mdps_per_digit)/1000.0;
+ 330              		.loc 1 68 0
+ 331 00aa 07EE903A 		vmov	s15, r3	@ int
+ 332 00ae F8EEE77A 		vcvt.f32.s32	s15, s15
+ 333 00b2 67EE277A 		vmul.f32	s15, s14, s15
+ 334 00b6 87EEA67A 		vdiv.f32	s14, s15, s13
+ 335 00ba 84ED027A 		vstr.32	s14, [r4, #8]
+  69:Src/internal_sensors.c **** 		return 1;
+ 336              		.loc 1 69 0
+ 337 00be 0120     		movs	r0, #1
+ARM GAS  /tmp/ccL2ZM5z.s 			page 8
+
+
+ 338              	.LVL27:
+ 339              	.L14:
+  70:Src/internal_sensors.c **** 	}
+  71:Src/internal_sensors.c **** 	return 0;
+  72:Src/internal_sensors.c **** }
+ 340              		.loc 1 72 0
+ 341 00c0 04B0     		add	sp, sp, #16
+ 342              	.LCFI11:
+ 343              		.cfi_def_cfa_offset 16
+ 344              		@ sp needed
+ 345 00c2 70BD     		pop	{r4, r5, r6, pc}
+ 346              	.LVL28:
+ 347              	.L17:
+ 348              		.align	2
+ 349              	.L16:
+ 350 00c4 00100048 		.word	1207963648
+ 351 00c8 00000000 		.word	hspi1
+ 352 00cc 00000000 		.word	.LANCHOR0
+ 353 00d0 00007A44 		.word	1148846080
+ 354              		.cfi_endproc
+ 355              	.LFE132:
+ 357              		.global	__aeabi_f2d
+ 358              		.global	__aeabi_dmul
+ 359              		.global	__aeabi_d2f
+ 360              		.section	.text.readAccelerometer,"ax",%progbits
+ 361              		.align	2
+ 362              		.global	readAccelerometer
+ 363              		.thumb
+ 364              		.thumb_func
+ 366              	readAccelerometer:
+ 367              	.LFB133:
+  73:Src/internal_sensors.c **** uint8_t readAccelerometer(float* data){
+ 368              		.loc 1 73 0
+ 369              		.cfi_startproc
+ 370              		@ args = 0, pretend = 0, frame = 16
+ 371              		@ frame_needed = 0, uses_anonymous_args = 0
+ 372              	.LVL29:
+ 373 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 374              	.LCFI12:
+ 375              		.cfi_def_cfa_offset 24
+ 376              		.cfi_offset 4, -24
+ 377              		.cfi_offset 5, -20
+ 378              		.cfi_offset 6, -16
+ 379              		.cfi_offset 7, -12
+ 380              		.cfi_offset 8, -8
+ 381              		.cfi_offset 14, -4
+ 382 0004 86B0     		sub	sp, sp, #24
+ 383              	.LCFI13:
+ 384              		.cfi_def_cfa_offset 48
+ 385 0006 8046     		mov	r8, r0
+  74:Src/internal_sensors.c **** 	//accelerometer and magnetometer lsm303dlhc
+  75:Src/internal_sensors.c **** 	//slave address = 00111xxb, whereas the xx bits are modified by the SDO/SA0 pin in order to modify
+  76:Src/internal_sensors.c **** 
+  77:Src/internal_sensors.c **** 	//magnetometer address 0x3c
+  78:Src/internal_sensors.c **** 	//0x67 might be for 100Hz but normally is 0x97 for 800Hz
+  79:Src/internal_sensors.c **** 
+  80:Src/internal_sensors.c **** 	//HAL_I2C_MspInit(&hi2c1);
+ARM GAS  /tmp/ccL2ZM5z.s 			page 9
+
+
+  81:Src/internal_sensors.c **** 
+  82:Src/internal_sensors.c **** 	uint8_t out[7];
+  83:Src/internal_sensors.c **** 	uint16_t xacc, yacc, zacc;
+  84:Src/internal_sensors.c **** 	uint8_t start_reg = 0x27 | 0x80;
+ 386              		.loc 1 84 0
+ 387 0008 06AD     		add	r5, sp, #24
+ 388 000a A723     		movs	r3, #167
+ 389 000c 05F8093D 		strb	r3, [r5, #-9]!
+ 390              	.LVL30:
+  85:Src/internal_sensors.c **** 	uint8_t accel_address = 0x32;
+  86:Src/internal_sensors.c **** 
+  87:Src/internal_sensors.c **** 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
+ 391              		.loc 1 87 0
+ 392 0010 3F4E     		ldr	r6, .L21+8
+ 393 0012 0122     		movs	r2, #1
+ 394 0014 0821     		movs	r1, #8
+ 395 0016 3046     		mov	r0, r6
+ 396              	.LVL31:
+ 397 0018 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 398              	.LVL32:
+  88:Src/internal_sensors.c **** 	HAL_I2C_Master_Transmit(&hi2c1, accel_address, &start_reg, 1, 50);
+ 399              		.loc 1 88 0
+ 400 001c 3D4F     		ldr	r7, .L21+12
+ 401 001e 3224     		movs	r4, #50
+ 402 0020 0094     		str	r4, [sp]
+ 403 0022 0123     		movs	r3, #1
+ 404 0024 2A46     		mov	r2, r5
+ 405 0026 2146     		mov	r1, r4
+ 406 0028 3846     		mov	r0, r7
+ 407 002a FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 408              	.LVL33:
+  89:Src/internal_sensors.c **** 	HAL_I2C_Master_Receive(&hi2c1, accel_address, out, 7, 50);
+ 409              		.loc 1 89 0
+ 410 002e 0094     		str	r4, [sp]
+ 411 0030 0723     		movs	r3, #7
+ 412 0032 04AA     		add	r2, sp, #16
+ 413 0034 2146     		mov	r1, r4
+ 414 0036 3846     		mov	r0, r7
+ 415 0038 FFF7FEFF 		bl	HAL_I2C_Master_Receive
+ 416              	.LVL34:
+  90:Src/internal_sensors.c **** 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
+ 417              		.loc 1 90 0
+ 418 003c 0022     		movs	r2, #0
+ 419 003e 0821     		movs	r1, #8
+ 420 0040 3046     		mov	r0, r6
+ 421 0042 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 422              	.LVL35:
+  91:Src/internal_sensors.c **** 
+  92:Src/internal_sensors.c **** 	if (out[0] & 0x8) {
+ 423              		.loc 1 92 0
+ 424 0046 9DF81030 		ldrb	r3, [sp, #16]	@ zero_extendqisi2
+ 425 004a 03F00803 		and	r3, r3, #8
+ 426 004e 03F0FF00 		and	r0, r3, #255
+ 427 0052 002B     		cmp	r3, #0
+ 428 0054 54D0     		beq	.L19
+  93:Src/internal_sensors.c **** 		xacc = (out[2] << 8) | out[1];
+ 429              		.loc 1 93 0
+ARM GAS  /tmp/ccL2ZM5z.s 			page 10
+
+
+ 430 0056 9DF81200 		ldrb	r0, [sp, #18]	@ zero_extendqisi2
+ 431 005a 9DF81130 		ldrb	r3, [sp, #17]	@ zero_extendqisi2
+ 432 005e 43EA0020 		orr	r0, r3, r0, lsl #8
+ 433              	.LVL36:
+  94:Src/internal_sensors.c **** 		yacc = (out[4] << 8) | out[3];
+ 434              		.loc 1 94 0
+ 435 0062 9DF81450 		ldrb	r5, [sp, #20]	@ zero_extendqisi2
+ 436 0066 9DF81330 		ldrb	r3, [sp, #19]	@ zero_extendqisi2
+ 437 006a 43EA0525 		orr	r5, r3, r5, lsl #8
+ 438              	.LVL37:
+  95:Src/internal_sensors.c **** 		zacc = (out[6] << 8) | out[5];
+ 439              		.loc 1 95 0
+ 440 006e 9DF81640 		ldrb	r4, [sp, #22]	@ zero_extendqisi2
+ 441 0072 9DF81530 		ldrb	r3, [sp, #21]	@ zero_extendqisi2
+ 442 0076 43EA0424 		orr	r4, r3, r4, lsl #8
+ 443              	.LVL38:
+  96:Src/internal_sensors.c **** 		// Accel scale is +- 2.0g
+  97:Src/internal_sensors.c **** 		data[0] = ((float)xacc)*(4.0/(65535.0))*9.81;
+ 444              		.loc 1 97 0
+ 445 007a 07EE900A 		vmov	s15, r0	@ int
+ 446 007e F8EE677A 		vcvt.f32.u32	s15, s15
+ 447 0082 17EE900A 		vmov	r0, s15
+ 448              	.LVL39:
+ 449 0086 FFF7FEFF 		bl	__aeabi_f2d
+ 450              	.LVL40:
+ 451 008a 4FF01012 		mov	r2, #1048592
+ 452 008e 224B     		ldr	r3, .L21+16
+ 453 0090 FFF7FEFF 		bl	__aeabi_dmul
+ 454              	.LVL41:
+ 455 0094 1CA3     		adr	r3, .L21
+ 456 0096 D3E90023 		ldrd	r2, [r3]
+ 457 009a FFF7FEFF 		bl	__aeabi_dmul
+ 458              	.LVL42:
+ 459 009e FFF7FEFF 		bl	__aeabi_d2f
+ 460              	.LVL43:
+ 461 00a2 C8F80000 		str	r0, [r8]	@ float
+  98:Src/internal_sensors.c **** 		data[1] = ((float)yacc)*(4.0/(65535.0))*9.81;
+ 462              		.loc 1 98 0
+ 463 00a6 07EE905A 		vmov	s15, r5	@ int
+ 464 00aa F8EE677A 		vcvt.f32.u32	s15, s15
+ 465 00ae 17EE900A 		vmov	r0, s15
+ 466 00b2 FFF7FEFF 		bl	__aeabi_f2d
+ 467              	.LVL44:
+ 468 00b6 4FF01012 		mov	r2, #1048592
+ 469 00ba 174B     		ldr	r3, .L21+16
+ 470 00bc FFF7FEFF 		bl	__aeabi_dmul
+ 471              	.LVL45:
+ 472 00c0 11A3     		adr	r3, .L21
+ 473 00c2 D3E90023 		ldrd	r2, [r3]
+ 474 00c6 FFF7FEFF 		bl	__aeabi_dmul
+ 475              	.LVL46:
+ 476 00ca FFF7FEFF 		bl	__aeabi_d2f
+ 477              	.LVL47:
+ 478 00ce C8F80400 		str	r0, [r8, #4]	@ float
+  99:Src/internal_sensors.c **** 		data[2] = ((float)zacc)*(4.0/(65535.0))*9.81;
+ 479              		.loc 1 99 0
+ 480 00d2 07EE904A 		vmov	s15, r4	@ int
+ARM GAS  /tmp/ccL2ZM5z.s 			page 11
+
+
+ 481 00d6 F8EE677A 		vcvt.f32.u32	s15, s15
+ 482 00da 17EE900A 		vmov	r0, s15
+ 483 00de FFF7FEFF 		bl	__aeabi_f2d
+ 484              	.LVL48:
+ 485 00e2 4FF01012 		mov	r2, #1048592
+ 486 00e6 0C4B     		ldr	r3, .L21+16
+ 487 00e8 FFF7FEFF 		bl	__aeabi_dmul
+ 488              	.LVL49:
+ 489 00ec 06A3     		adr	r3, .L21
+ 490 00ee D3E90023 		ldrd	r2, [r3]
+ 491 00f2 FFF7FEFF 		bl	__aeabi_dmul
+ 492              	.LVL50:
+ 493 00f6 FFF7FEFF 		bl	__aeabi_d2f
+ 494              	.LVL51:
+ 495 00fa C8F80800 		str	r0, [r8, #8]	@ float
+ 100:Src/internal_sensors.c **** 		return 1;
+ 496              		.loc 1 100 0
+ 497 00fe 0120     		movs	r0, #1
+ 498              	.LVL52:
+ 499              	.L19:
+ 101:Src/internal_sensors.c **** 	}
+ 102:Src/internal_sensors.c **** 	return 0;
+ 103:Src/internal_sensors.c **** }
+ 500              		.loc 1 103 0
+ 501 0100 06B0     		add	sp, sp, #24
+ 502              	.LCFI14:
+ 503              		.cfi_def_cfa_offset 24
+ 504              		@ sp needed
+ 505 0102 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 506              	.LVL53:
+ 507              	.L22:
+ 508 0106 00BF     		.align	3
+ 509              	.L21:
+ 510 0108 1F85EB51 		.word	1374389535
+ 511 010c B89E2340 		.word	1076076216
+ 512 0110 00100048 		.word	1207963648
+ 513 0114 00000000 		.word	hi2c1
+ 514 0118 1000103F 		.word	1058013200
+ 515              		.cfi_endproc
+ 516              	.LFE133:
+ 518              		.section	.text.readMagnetometer,"ax",%progbits
+ 519              		.align	2
+ 520              		.global	readMagnetometer
+ 521              		.thumb
+ 522              		.thumb_func
+ 524              	readMagnetometer:
+ 525              	.LFB134:
+ 104:Src/internal_sensors.c **** uint8_t readMagnetometer(float* data){
+ 526              		.loc 1 104 0
+ 527              		.cfi_startproc
+ 528              		@ args = 0, pretend = 0, frame = 8
+ 529              		@ frame_needed = 0, uses_anonymous_args = 0
+ 530              	.LVL54:
+ 531 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 532              	.LCFI15:
+ 533              		.cfi_def_cfa_offset 24
+ 534              		.cfi_offset 4, -24
+ARM GAS  /tmp/ccL2ZM5z.s 			page 12
+
+
+ 535              		.cfi_offset 5, -20
+ 536              		.cfi_offset 6, -16
+ 537              		.cfi_offset 7, -12
+ 538              		.cfi_offset 8, -8
+ 539              		.cfi_offset 14, -4
+ 540 0004 84B0     		sub	sp, sp, #16
+ 541              	.LCFI16:
+ 542              		.cfi_def_cfa_offset 40
+ 543 0006 0446     		mov	r4, r0
+ 544              	.LVL55:
+ 105:Src/internal_sensors.c **** 	uint8_t magn_address = 0x3c;
+ 106:Src/internal_sensors.c **** 	uint8_t start_reg = 0x03;
+ 545              		.loc 1 106 0
+ 546 0008 04AD     		add	r5, sp, #16
+ 547 000a 0323     		movs	r3, #3
+ 548 000c 05F8013D 		strb	r3, [r5, #-1]!
+ 107:Src/internal_sensors.c **** 	uint8_t out[7];
+ 108:Src/internal_sensors.c **** 	uint16_t xmagn, ymagn, zmagn;
+ 109:Src/internal_sensors.c **** 
+ 110:Src/internal_sensors.c **** 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_SET);
+ 549              		.loc 1 110 0
+ 550 0010 334E     		ldr	r6, .L25+8
+ 551 0012 0122     		movs	r2, #1
+ 552 0014 0821     		movs	r1, #8
+ 553 0016 3046     		mov	r0, r6
+ 554              	.LVL56:
+ 555 0018 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 556              	.LVL57:
+ 111:Src/internal_sensors.c **** 	HAL_I2C_Master_Transmit(&hi2c1, magn_address, &start_reg, 1, 50);
+ 557              		.loc 1 111 0
+ 558 001c 314F     		ldr	r7, .L25+12
+ 559 001e 4FF03208 		mov	r8, #50
+ 560 0022 CDF80080 		str	r8, [sp]
+ 561 0026 0123     		movs	r3, #1
+ 562 0028 2A46     		mov	r2, r5
+ 563 002a 3C21     		movs	r1, #60
+ 564 002c 3846     		mov	r0, r7
+ 565 002e FFF7FEFF 		bl	HAL_I2C_Master_Transmit
+ 566              	.LVL58:
+ 112:Src/internal_sensors.c **** 	HAL_I2C_Master_Receive(&hi2c1, magn_address, out, 7, 50);
+ 567              		.loc 1 112 0
+ 568 0032 CDF80080 		str	r8, [sp]
+ 569 0036 0723     		movs	r3, #7
+ 570 0038 02AA     		add	r2, sp, #8
+ 571 003a 3C21     		movs	r1, #60
+ 572 003c 3846     		mov	r0, r7
+ 573 003e FFF7FEFF 		bl	HAL_I2C_Master_Receive
+ 574              	.LVL59:
+ 113:Src/internal_sensors.c **** 	HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, GPIO_PIN_RESET);
+ 575              		.loc 1 113 0
+ 576 0042 0022     		movs	r2, #0
+ 577 0044 0821     		movs	r1, #8
+ 578 0046 3046     		mov	r0, r6
+ 579 0048 FFF7FEFF 		bl	HAL_GPIO_WritePin
+ 580              	.LVL60:
+ 114:Src/internal_sensors.c **** 
+ 115:Src/internal_sensors.c ****     xmagn = (out[0] << 8) | out[1];
+ARM GAS  /tmp/ccL2ZM5z.s 			page 13
+
+
+ 581              		.loc 1 115 0
+ 582 004c 9DF80800 		ldrb	r0, [sp, #8]	@ zero_extendqisi2
+ 583 0050 9DF80930 		ldrb	r3, [sp, #9]	@ zero_extendqisi2
+ 584 0054 43EA0020 		orr	r0, r3, r0, lsl #8
+ 585              	.LVL61:
+ 116:Src/internal_sensors.c ****     zmagn = (out[2] << 8) | out[3];
+ 586              		.loc 1 116 0
+ 587 0058 9DF80A50 		ldrb	r5, [sp, #10]	@ zero_extendqisi2
+ 588 005c 9DF80B30 		ldrb	r3, [sp, #11]	@ zero_extendqisi2
+ 589 0060 43EA0525 		orr	r5, r3, r5, lsl #8
+ 590              	.LVL62:
+ 117:Src/internal_sensors.c ****     ymagn = (out[4] << 8) | out[5];
+ 591              		.loc 1 117 0
+ 592 0064 9DF80C60 		ldrb	r6, [sp, #12]	@ zero_extendqisi2
+ 593 0068 9DF80D30 		ldrb	r3, [sp, #13]	@ zero_extendqisi2
+ 594 006c 43EA0626 		orr	r6, r3, r6, lsl #8
+ 595              	.LVL63:
+ 118:Src/internal_sensors.c ****     data[0] = ((float)xmagn)*1.22;
+ 596              		.loc 1 118 0
+ 597 0070 07EE900A 		vmov	s15, r0	@ int
+ 598 0074 F8EE677A 		vcvt.f32.u32	s15, s15
+ 599 0078 17EE900A 		vmov	r0, s15
+ 600              	.LVL64:
+ 601 007c FFF7FEFF 		bl	__aeabi_f2d
+ 602              	.LVL65:
+ 603 0080 15A3     		adr	r3, .L25
+ 604 0082 D3E90023 		ldrd	r2, [r3]
+ 605 0086 FFF7FEFF 		bl	__aeabi_dmul
+ 606              	.LVL66:
+ 607 008a FFF7FEFF 		bl	__aeabi_d2f
+ 608              	.LVL67:
+ 609 008e 2060     		str	r0, [r4]	@ float
+ 119:Src/internal_sensors.c ****     data[1] = ((float)ymagn)*1.22;
+ 610              		.loc 1 119 0
+ 611 0090 07EE906A 		vmov	s15, r6	@ int
+ 612 0094 F8EE677A 		vcvt.f32.u32	s15, s15
+ 613 0098 17EE900A 		vmov	r0, s15
+ 614 009c FFF7FEFF 		bl	__aeabi_f2d
+ 615              	.LVL68:
+ 616 00a0 0DA3     		adr	r3, .L25
+ 617 00a2 D3E90023 		ldrd	r2, [r3]
+ 618 00a6 FFF7FEFF 		bl	__aeabi_dmul
+ 619              	.LVL69:
+ 620 00aa FFF7FEFF 		bl	__aeabi_d2f
+ 621              	.LVL70:
+ 622 00ae 6060     		str	r0, [r4, #4]	@ float
+ 120:Src/internal_sensors.c ****     data[2] = ((float)zmagn)*1.22;
+ 623              		.loc 1 120 0
+ 624 00b0 07EE905A 		vmov	s15, r5	@ int
+ 625 00b4 F8EE677A 		vcvt.f32.u32	s15, s15
+ 626 00b8 17EE900A 		vmov	r0, s15
+ 627 00bc FFF7FEFF 		bl	__aeabi_f2d
+ 628              	.LVL71:
+ 629 00c0 05A3     		adr	r3, .L25
+ 630 00c2 D3E90023 		ldrd	r2, [r3]
+ 631 00c6 FFF7FEFF 		bl	__aeabi_dmul
+ 632              	.LVL72:
+ARM GAS  /tmp/ccL2ZM5z.s 			page 14
+
+
+ 633 00ca FFF7FEFF 		bl	__aeabi_d2f
+ 634              	.LVL73:
+ 635 00ce A060     		str	r0, [r4, #8]	@ float
+ 121:Src/internal_sensors.c ****     return 1;
+ 122:Src/internal_sensors.c **** }
+ 636              		.loc 1 122 0
+ 637 00d0 0120     		movs	r0, #1
+ 638 00d2 04B0     		add	sp, sp, #16
+ 639              	.LCFI17:
+ 640              		.cfi_def_cfa_offset 24
+ 641              		@ sp needed
+ 642 00d4 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 643              	.LVL74:
+ 644              	.L26:
+ 645              		.align	3
+ 646              	.L25:
+ 647 00d8 85EB51B8 		.word	-1202590843
+ 648 00dc 1E85F33F 		.word	1072923934
+ 649 00e0 00100048 		.word	1207963648
+ 650 00e4 00000000 		.word	hi2c1
+ 651              		.cfi_endproc
+ 652              	.LFE134:
+ 654              		.section	.text.MX_I2C1_Init,"ax",%progbits
+ 655              		.align	2
+ 656              		.global	MX_I2C1_Init
+ 657              		.thumb
+ 658              		.thumb_func
+ 660              	MX_I2C1_Init:
+ 661              	.LFB135:
+ 123:Src/internal_sensors.c **** 
+ 124:Src/internal_sensors.c **** /* I2C1 init function */
+ 125:Src/internal_sensors.c **** void MX_I2C1_Init(void)
+ 126:Src/internal_sensors.c **** {
+ 662              		.loc 1 126 0
+ 663              		.cfi_startproc
+ 664              		@ args = 0, pretend = 0, frame = 0
+ 665              		@ frame_needed = 0, uses_anonymous_args = 0
+ 666 0000 08B5     		push	{r3, lr}
+ 667              	.LCFI18:
+ 668              		.cfi_def_cfa_offset 8
+ 669              		.cfi_offset 3, -8
+ 670              		.cfi_offset 14, -4
+ 127:Src/internal_sensors.c **** 
+ 128:Src/internal_sensors.c ****   hi2c1.Instance = I2C1;
+ 671              		.loc 1 128 0
+ 672 0002 1448     		ldr	r0, .L32
+ 673 0004 144B     		ldr	r3, .L32+4
+ 674 0006 0360     		str	r3, [r0]
+ 129:Src/internal_sensors.c ****   hi2c1.Init.Timing = 0x00902025;	//0x2000090E;
+ 675              		.loc 1 129 0
+ 676 0008 144B     		ldr	r3, .L32+8
+ 677 000a 4360     		str	r3, [r0, #4]
+ 130:Src/internal_sensors.c ****   hi2c1.Init.OwnAddress1 = 0;
+ 678              		.loc 1 130 0
+ 679 000c 0023     		movs	r3, #0
+ 680 000e 8360     		str	r3, [r0, #8]
+ 131:Src/internal_sensors.c ****   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
+ARM GAS  /tmp/ccL2ZM5z.s 			page 15
+
+
+ 681              		.loc 1 131 0
+ 682 0010 0122     		movs	r2, #1
+ 683 0012 C260     		str	r2, [r0, #12]
+ 132:Src/internal_sensors.c ****   hi2c1.Init.DualAddressMode = I2C_DUALADDRESS_DISABLE;
+ 684              		.loc 1 132 0
+ 685 0014 0361     		str	r3, [r0, #16]
+ 133:Src/internal_sensors.c ****   hi2c1.Init.OwnAddress2 = 0;
+ 686              		.loc 1 133 0
+ 687 0016 4361     		str	r3, [r0, #20]
+ 134:Src/internal_sensors.c ****   hi2c1.Init.OwnAddress2Masks = I2C_OA2_NOMASK;
+ 688              		.loc 1 134 0
+ 689 0018 8361     		str	r3, [r0, #24]
+ 135:Src/internal_sensors.c ****   hi2c1.Init.GeneralCallMode = I2C_GENERALCALL_DISABLE;
+ 690              		.loc 1 135 0
+ 691 001a C361     		str	r3, [r0, #28]
+ 136:Src/internal_sensors.c ****   hi2c1.Init.NoStretchMode = I2C_NOSTRETCH_DISABLE;
+ 692              		.loc 1 136 0
+ 693 001c 0362     		str	r3, [r0, #32]
+ 137:Src/internal_sensors.c ****   if (HAL_I2C_Init(&hi2c1) != HAL_OK)
+ 694              		.loc 1 137 0
+ 695 001e FFF7FEFF 		bl	HAL_I2C_Init
+ 696              	.LVL75:
+ 697 0022 18B1     		cbz	r0, .L28
+ 138:Src/internal_sensors.c ****   {
+ 139:Src/internal_sensors.c ****     _Error_Handler(__FILE__, __LINE__);
+ 698              		.loc 1 139 0
+ 699 0024 8B21     		movs	r1, #139
+ 700 0026 0E48     		ldr	r0, .L32+12
+ 701 0028 FFF7FEFF 		bl	_Error_Handler
+ 702              	.LVL76:
+ 703              	.L28:
+ 140:Src/internal_sensors.c ****   }
+ 141:Src/internal_sensors.c **** 
+ 142:Src/internal_sensors.c ****     /**Configure Analogue filter
+ 143:Src/internal_sensors.c ****     */
+ 144:Src/internal_sensors.c ****   if (HAL_I2CEx_ConfigAnalogFilter(&hi2c1, I2C_ANALOGFILTER_ENABLE) != HAL_OK)
+ 704              		.loc 1 144 0
+ 705 002c 0021     		movs	r1, #0
+ 706 002e 0948     		ldr	r0, .L32
+ 707 0030 FFF7FEFF 		bl	HAL_I2CEx_ConfigAnalogFilter
+ 708              	.LVL77:
+ 709 0034 18B1     		cbz	r0, .L29
+ 145:Src/internal_sensors.c ****   {
+ 146:Src/internal_sensors.c ****     _Error_Handler(__FILE__, __LINE__);
+ 710              		.loc 1 146 0
+ 711 0036 9221     		movs	r1, #146
+ 712 0038 0948     		ldr	r0, .L32+12
+ 713 003a FFF7FEFF 		bl	_Error_Handler
+ 714              	.LVL78:
+ 715              	.L29:
+ 147:Src/internal_sensors.c ****   }
+ 148:Src/internal_sensors.c **** 
+ 149:Src/internal_sensors.c ****     /**Configure Digital filter
+ 150:Src/internal_sensors.c ****     */
+ 151:Src/internal_sensors.c ****   if (HAL_I2CEx_ConfigDigitalFilter(&hi2c1, 0) != HAL_OK)
+ 716              		.loc 1 151 0
+ 717 003e 0021     		movs	r1, #0
+ARM GAS  /tmp/ccL2ZM5z.s 			page 16
+
+
+ 718 0040 0448     		ldr	r0, .L32
+ 719 0042 FFF7FEFF 		bl	HAL_I2CEx_ConfigDigitalFilter
+ 720              	.LVL79:
+ 721 0046 18B1     		cbz	r0, .L27
+ 152:Src/internal_sensors.c ****   {
+ 153:Src/internal_sensors.c ****     _Error_Handler(__FILE__, __LINE__);
+ 722              		.loc 1 153 0
+ 723 0048 9921     		movs	r1, #153
+ 724 004a 0548     		ldr	r0, .L32+12
+ 725 004c FFF7FEFF 		bl	_Error_Handler
+ 726              	.LVL80:
+ 727              	.L27:
+ 728 0050 08BD     		pop	{r3, pc}
+ 729              	.L33:
+ 730 0052 00BF     		.align	2
+ 731              	.L32:
+ 732 0054 00000000 		.word	hi2c1
+ 733 0058 00540040 		.word	1073763328
+ 734 005c 25209000 		.word	9445413
+ 735 0060 00000000 		.word	.LC0
+ 736              		.cfi_endproc
+ 737              	.LFE135:
+ 739              		.section	.text.MX_SPI1_Init,"ax",%progbits
+ 740              		.align	2
+ 741              		.global	MX_SPI1_Init
+ 742              		.thumb
+ 743              		.thumb_func
+ 745              	MX_SPI1_Init:
+ 746              	.LFB136:
+ 154:Src/internal_sensors.c ****   }
+ 155:Src/internal_sensors.c **** 
+ 156:Src/internal_sensors.c **** }
+ 157:Src/internal_sensors.c **** 
+ 158:Src/internal_sensors.c **** /* SPI1 init function */
+ 159:Src/internal_sensors.c **** void MX_SPI1_Init(void)
+ 160:Src/internal_sensors.c **** {
+ 747              		.loc 1 160 0
+ 748              		.cfi_startproc
+ 749              		@ args = 0, pretend = 0, frame = 0
+ 750              		@ frame_needed = 0, uses_anonymous_args = 0
+ 751 0000 08B5     		push	{r3, lr}
+ 752              	.LCFI19:
+ 753              		.cfi_def_cfa_offset 8
+ 754              		.cfi_offset 3, -8
+ 755              		.cfi_offset 14, -4
+ 161:Src/internal_sensors.c **** 
+ 162:Src/internal_sensors.c ****   hspi1.Instance = SPI1;
+ 756              		.loc 1 162 0
+ 757 0002 1148     		ldr	r0, .L37
+ 758 0004 114B     		ldr	r3, .L37+4
+ 759 0006 0360     		str	r3, [r0]
+ 163:Src/internal_sensors.c ****   hspi1.Init.Mode = SPI_MODE_MASTER;
+ 760              		.loc 1 163 0
+ 761 0008 4FF48273 		mov	r3, #260
+ 762 000c 4360     		str	r3, [r0, #4]
+ 164:Src/internal_sensors.c ****   hspi1.Init.Direction = SPI_DIRECTION_2LINES;
+ 763              		.loc 1 164 0
+ARM GAS  /tmp/ccL2ZM5z.s 			page 17
+
+
+ 764 000e 0023     		movs	r3, #0
+ 765 0010 8360     		str	r3, [r0, #8]
+ 165:Src/internal_sensors.c ****   hspi1.Init.DataSize = SPI_DATASIZE_8BIT;						//SPI_DATASIZE_4BIT;
+ 766              		.loc 1 165 0
+ 767 0012 4FF4E062 		mov	r2, #1792
+ 768 0016 C260     		str	r2, [r0, #12]
+ 166:Src/internal_sensors.c ****   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
+ 769              		.loc 1 166 0
+ 770 0018 0361     		str	r3, [r0, #16]
+ 167:Src/internal_sensors.c ****   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
+ 771              		.loc 1 167 0
+ 772 001a 4361     		str	r3, [r0, #20]
+ 168:Src/internal_sensors.c ****   hspi1.Init.NSS = SPI_NSS_SOFT;
+ 773              		.loc 1 168 0
+ 774 001c 4FF40072 		mov	r2, #512
+ 775 0020 8261     		str	r2, [r0, #24]
+ 169:Src/internal_sensors.c ****   hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;    //SPI_BAUDRATEPRESCALER_4;
+ 776              		.loc 1 169 0
+ 777 0022 1822     		movs	r2, #24
+ 778 0024 C261     		str	r2, [r0, #28]
+ 170:Src/internal_sensors.c ****   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
+ 779              		.loc 1 170 0
+ 780 0026 0362     		str	r3, [r0, #32]
+ 171:Src/internal_sensors.c ****   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
+ 781              		.loc 1 171 0
+ 782 0028 4362     		str	r3, [r0, #36]
+ 172:Src/internal_sensors.c ****   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
+ 783              		.loc 1 172 0
+ 784 002a 8362     		str	r3, [r0, #40]
+ 173:Src/internal_sensors.c ****   hspi1.Init.CRCPolynomial = 7;
+ 785              		.loc 1 173 0
+ 786 002c 0722     		movs	r2, #7
+ 787 002e C262     		str	r2, [r0, #44]
+ 174:Src/internal_sensors.c ****   hspi1.Init.CRCLength = SPI_CRC_LENGTH_DATASIZE;
+ 788              		.loc 1 174 0
+ 789 0030 0363     		str	r3, [r0, #48]
+ 175:Src/internal_sensors.c ****   hspi1.Init.NSSPMode = SPI_NSS_PULSE_ENABLE;
+ 790              		.loc 1 175 0
+ 791 0032 0823     		movs	r3, #8
+ 792 0034 4363     		str	r3, [r0, #52]
+ 176:Src/internal_sensors.c ****   if (HAL_SPI_Init(&hspi1) != HAL_OK)
+ 793              		.loc 1 176 0
+ 794 0036 FFF7FEFF 		bl	HAL_SPI_Init
+ 795              	.LVL81:
+ 796 003a 18B1     		cbz	r0, .L34
+ 177:Src/internal_sensors.c ****   {
+ 178:Src/internal_sensors.c ****     _Error_Handler(__FILE__, __LINE__);
+ 797              		.loc 1 178 0
+ 798 003c B221     		movs	r1, #178
+ 799 003e 0448     		ldr	r0, .L37+8
+ 800 0040 FFF7FEFF 		bl	_Error_Handler
+ 801              	.LVL82:
+ 802              	.L34:
+ 803 0044 08BD     		pop	{r3, pc}
+ 804              	.L38:
+ 805 0046 00BF     		.align	2
+ 806              	.L37:
+ARM GAS  /tmp/ccL2ZM5z.s 			page 18
+
+
+ 807 0048 00000000 		.word	hspi1
+ 808 004c 00300140 		.word	1073819648
+ 809 0050 00000000 		.word	.LC0
+ 810              		.cfi_endproc
+ 811              	.LFE136:
+ 813              		.comm	hspi1,100,4
+ 814              		.comm	hi2c1,76,4
+ 815              		.global	mdps_per_digit
+ 816              		.comm	magn,12,4
+ 817              		.comm	accel,12,4
+ 818              		.comm	gyro,12,4
+ 819              		.section	.data.mdps_per_digit,"aw",%progbits
+ 820              		.align	2
+ 821              		.set	.LANCHOR0,. + 0
+ 824              	mdps_per_digit:
+ 825 0000 00000C41 		.word	1091305472
+ 826              		.section	.rodata.str1.4,"aMS",%progbits,1
+ 827              		.align	2
+ 828              	.LC0:
+ 829 0000 5372632F 		.ascii	"Src/internal_sensors.c\000"
+ 829      696E7465 
+ 829      726E616C 
+ 829      5F73656E 
+ 829      736F7273 
+ 830              		.text
+ 831              	.Letext0:
+ 832              		.file 2 "/opt/gcc-arm-none-eabi-5_4-2016q3/arm-none-eabi/include/machine/_default_types.h"
+ 833              		.file 3 "/opt/gcc-arm-none-eabi-5_4-2016q3/arm-none-eabi/include/sys/_stdint.h"
+ 834              		.file 4 "Drivers/CMSIS/Device/ST/STM32F3xx/Include/stm32f303xc.h"
+ 835              		.file 5 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_def.h"
+ 836              		.file 6 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_gpio.h"
+ 837              		.file 7 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_dma.h"
+ 838              		.file 8 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_i2c.h"
+ 839              		.file 9 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_spi.h"
+ 840              		.file 10 "Drivers/CMSIS/Include/core_cm4.h"
+ 841              		.file 11 "Inc/internal_sensors.h"
+ 842              		.file 12 "Inc/main.h"
+ 843              		.file 13 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_i2c_ex.h"
+ARM GAS  /tmp/ccL2ZM5z.s 			page 19
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 internal_sensors.c
+     /tmp/ccL2ZM5z.s:22     .text.initGyroscope:00000000 $t
+     /tmp/ccL2ZM5z.s:27     .text.initGyroscope:00000000 initGyroscope
+     /tmp/ccL2ZM5z.s:86     .text.initGyroscope:00000044 $d
+                            *COM*:00000064 hspi1
+     /tmp/ccL2ZM5z.s:92     .text.initAccelerometer:00000000 $t
+     /tmp/ccL2ZM5z.s:97     .text.initAccelerometer:00000000 initAccelerometer
+     /tmp/ccL2ZM5z.s:147    .text.initAccelerometer:00000038 $d
+                            *COM*:0000004c hi2c1
+     /tmp/ccL2ZM5z.s:153    .text.initMagnetometer:00000000 $t
+     /tmp/ccL2ZM5z.s:158    .text.initMagnetometer:00000000 initMagnetometer
+     /tmp/ccL2ZM5z.s:225    .text.initMagnetometer:00000054 $d
+     /tmp/ccL2ZM5z.s:231    .text.readGyroscope:00000000 $t
+     /tmp/ccL2ZM5z.s:236    .text.readGyroscope:00000000 readGyroscope
+     /tmp/ccL2ZM5z.s:350    .text.readGyroscope:000000c4 $d
+     /tmp/ccL2ZM5z.s:361    .text.readAccelerometer:00000000 $t
+     /tmp/ccL2ZM5z.s:366    .text.readAccelerometer:00000000 readAccelerometer
+     /tmp/ccL2ZM5z.s:510    .text.readAccelerometer:00000108 $d
+     /tmp/ccL2ZM5z.s:519    .text.readMagnetometer:00000000 $t
+     /tmp/ccL2ZM5z.s:524    .text.readMagnetometer:00000000 readMagnetometer
+     /tmp/ccL2ZM5z.s:647    .text.readMagnetometer:000000d8 $d
+     /tmp/ccL2ZM5z.s:655    .text.MX_I2C1_Init:00000000 $t
+     /tmp/ccL2ZM5z.s:660    .text.MX_I2C1_Init:00000000 MX_I2C1_Init
+     /tmp/ccL2ZM5z.s:732    .text.MX_I2C1_Init:00000054 $d
+     /tmp/ccL2ZM5z.s:740    .text.MX_SPI1_Init:00000000 $t
+     /tmp/ccL2ZM5z.s:745    .text.MX_SPI1_Init:00000000 MX_SPI1_Init
+     /tmp/ccL2ZM5z.s:807    .text.MX_SPI1_Init:00000048 $d
+     /tmp/ccL2ZM5z.s:824    .data.mdps_per_digit:00000000 mdps_per_digit
+                            *COM*:0000000c magn
+                            *COM*:0000000c accel
+                            *COM*:0000000c gyro
+     /tmp/ccL2ZM5z.s:820    .data.mdps_per_digit:00000000 $d
+     /tmp/ccL2ZM5z.s:827    .rodata.str1.4:00000000 $d
+                     .debug_frame:00000010 $d
+
+UNDEFINED SYMBOLS
+HAL_GPIO_WritePin
+HAL_SPI_Transmit
+HAL_I2C_Master_Transmit
+HAL_SPI_Receive
+__aeabi_f2d
+__aeabi_dmul
+__aeabi_d2f
+HAL_I2C_Master_Receive
+HAL_I2C_Init
+_Error_Handler
+HAL_I2CEx_ConfigAnalogFilter
+HAL_I2CEx_ConfigDigitalFilter
+HAL_SPI_Init

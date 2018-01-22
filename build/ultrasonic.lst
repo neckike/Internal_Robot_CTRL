@@ -1,0 +1,210 @@
+ARM GAS  /tmp/ccHqXe9y.s 			page 1
+
+
+   1              		.syntax unified
+   2              		.cpu cortex-m4
+   3              		.eabi_attribute 27, 1
+   4              		.eabi_attribute 28, 1
+   5              		.fpu fpv4-sp-d16
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.thumb
+  16              		.syntax unified
+  17              		.file	"ultrasonic.c"
+  18              		.text
+  19              	.Ltext0:
+  20              		.cfi_sections	.debug_frame
+  21              		.section	.text.readUltrasonic,"ax",%progbits
+  22              		.align	2
+  23              		.global	readUltrasonic
+  24              		.thumb
+  25              		.thumb_func
+  27              	readUltrasonic:
+  28              	.LFB129:
+  29              		.file 1 "Src/ultrasonic.c"
+   1:Src/ultrasonic.c **** /*
+   2:Src/ultrasonic.c ****  * ultrasonic.c
+   3:Src/ultrasonic.c ****  *
+   4:Src/ultrasonic.c ****  *  Created on: Dec 14, 2017
+   5:Src/ultrasonic.c ****  *      Author: hector
+   6:Src/ultrasonic.c ****  */
+   7:Src/ultrasonic.c **** #include "ultrasonic.h"
+   8:Src/ultrasonic.c **** const TickType_t timeDelayUltras = 1 / (portTICK_PERIOD_MS*1000);	//1us
+   9:Src/ultrasonic.c **** 
+  10:Src/ultrasonic.c **** float readUltrasonic(sensorPin *sensor){
+  30              		.loc 1 10 0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              	.LVL0:
+  35 0000 38B5     		push	{r3, r4, r5, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 16
+  38              		.cfi_offset 3, -16
+  39              		.cfi_offset 4, -12
+  40              		.cfi_offset 5, -8
+  41              		.cfi_offset 14, -4
+  42 0002 0446     		mov	r4, r0
+  11:Src/ultrasonic.c **** 
+  12:Src/ultrasonic.c **** 	uint32_t time, timeout;
+  13:Src/ultrasonic.c **** 	HAL_GPIO_WritePin(sensor->grp_trig, sensor->num_trig, GPIO_PIN_RESET);
+  43              		.loc 1 13 0
+  44 0004 0022     		movs	r2, #0
+  45 0006 0188     		ldrh	r1, [r0]
+ARM GAS  /tmp/ccHqXe9y.s 			page 2
+
+
+  46 0008 4068     		ldr	r0, [r0, #4]
+  47              	.LVL1:
+  48 000a FFF7FEFF 		bl	HAL_GPIO_WritePin
+  49              	.LVL2:
+  14:Src/ultrasonic.c **** 	vTaskDelay(timeDelayUltras*2);	//2us
+  50              		.loc 1 14 0
+  51 000e 0020     		movs	r0, #0
+  52 0010 FFF7FEFF 		bl	vTaskDelay
+  53              	.LVL3:
+  15:Src/ultrasonic.c **** 	HAL_GPIO_WritePin(sensor->grp_trig, sensor->num_trig, GPIO_PIN_SET);
+  54              		.loc 1 15 0
+  55 0014 0122     		movs	r2, #1
+  56 0016 2188     		ldrh	r1, [r4]
+  57 0018 6068     		ldr	r0, [r4, #4]
+  58 001a FFF7FEFF 		bl	HAL_GPIO_WritePin
+  59              	.LVL4:
+  16:Src/ultrasonic.c **** 	vTaskDelay(timeDelayUltras*10);	//10us
+  60              		.loc 1 16 0
+  61 001e 0020     		movs	r0, #0
+  62 0020 FFF7FEFF 		bl	vTaskDelay
+  63              	.LVL5:
+  17:Src/ultrasonic.c **** 	HAL_GPIO_WritePin(sensor->grp_trig, sensor->num_trig, GPIO_PIN_RESET);
+  64              		.loc 1 17 0
+  65 0024 0022     		movs	r2, #0
+  66 0026 2188     		ldrh	r1, [r4]
+  67 0028 6068     		ldr	r0, [r4, #4]
+  68 002a FFF7FEFF 		bl	HAL_GPIO_WritePin
+  69              	.LVL6:
+  18:Src/ultrasonic.c **** 	timeout = HCSR04_TIMEOUT;
+  70              		.loc 1 18 0
+  71 002e 134D     		ldr	r5, .L9
+  19:Src/ultrasonic.c **** 
+  20:Src/ultrasonic.c **** 	while (!HAL_GPIO_ReadPin(sensor->grp_echo, sensor->num_echo)) {
+  72              		.loc 1 20 0
+  73 0030 02E0     		b	.L2
+  74              	.LVL7:
+  75              	.L4:
+  21:Src/ultrasonic.c **** 		if (timeout-- == 0x00) {
+  76              		.loc 1 21 0
+  77 0032 6B1E     		subs	r3, r5, #1
+  78              	.LVL8:
+  79 0034 FDB1     		cbz	r5, .L7
+  80 0036 1D46     		mov	r5, r3
+  81              	.LVL9:
+  82              	.L2:
+  20:Src/ultrasonic.c **** 		if (timeout-- == 0x00) {
+  83              		.loc 1 20 0
+  84 0038 6188     		ldrh	r1, [r4, #2]
+  85 003a A068     		ldr	r0, [r4, #8]
+  86 003c FFF7FEFF 		bl	HAL_GPIO_ReadPin
+  87              	.LVL10:
+  88 0040 0028     		cmp	r0, #0
+  89 0042 F6D0     		beq	.L4
+  90 0044 0025     		movs	r5, #0
+  91              	.LVL11:
+  92 0046 03E0     		b	.L5
+  93              	.LVL12:
+ARM GAS  /tmp/ccHqXe9y.s 			page 3
+
+
+  94              	.L6:
+  22:Src/ultrasonic.c **** 			//HAL_GPIO_WritePin(GPIOE, GPIO_PIN_9, GPIO_PIN_SET);		//LED3_RED		NORTH
+  23:Src/ultrasonic.c **** 			return -1;
+  24:Src/ultrasonic.c **** 		}
+  25:Src/ultrasonic.c **** 	}
+  26:Src/ultrasonic.c **** 	time = 0;
+  27:Src/ultrasonic.c **** 	while (HAL_GPIO_ReadPin(sensor->grp_echo, sensor->num_echo)) {
+  28:Src/ultrasonic.c **** 		time++;
+  95              		.loc 1 28 0
+  96 0048 0135     		adds	r5, r5, #1
+  97              	.LVL13:
+  29:Src/ultrasonic.c **** 		/* Delay 1us */
+  30:Src/ultrasonic.c **** 		vTaskDelay(timeDelayUltras);
+  98              		.loc 1 30 0
+  99 004a 0020     		movs	r0, #0
+ 100 004c FFF7FEFF 		bl	vTaskDelay
+ 101              	.LVL14:
+ 102              	.L5:
+  27:Src/ultrasonic.c **** 		time++;
+ 103              		.loc 1 27 0
+ 104 0050 6188     		ldrh	r1, [r4, #2]
+ 105 0052 A068     		ldr	r0, [r4, #8]
+ 106 0054 FFF7FEFF 		bl	HAL_GPIO_ReadPin
+ 107              	.LVL15:
+ 108 0058 0028     		cmp	r0, #0
+ 109 005a F5D1     		bne	.L6
+  31:Src/ultrasonic.c **** 	}
+  32:Src/ultrasonic.c **** 	/* Convert us to cm */
+  33:Src/ultrasonic.c **** 	//distance =  (float)time * HCSR04_NUMBER;
+  34:Src/ultrasonic.c **** 	return (float)time /58 - 20;
+ 110              		.loc 1 34 0
+ 111 005c 07EE905A 		vmov	s15, r5	@ int
+ 112 0060 F8EE677A 		vcvt.f32.u32	s15, s15
+ 113 0064 DFED066A 		vldr.32	s13, .L9+4
+ 114 0068 87EEA67A 		vdiv.f32	s14, s15, s13
+ 115 006c B3EE040A 		vmov.f32	s0, #2.0e+1
+ 116 0070 37EE400A 		vsub.f32	s0, s14, s0
+ 117 0074 38BD     		pop	{r3, r4, r5, pc}
+ 118              	.LVL16:
+ 119              	.L7:
+  23:Src/ultrasonic.c **** 		}
+ 120              		.loc 1 23 0
+ 121 0076 BFEE000A 		vmov.f32	s0, #-1.0e+0
+  35:Src/ultrasonic.c **** }
+ 122              		.loc 1 35 0
+ 123 007a 38BD     		pop	{r3, r4, r5, pc}
+ 124              	.LVL17:
+ 125              	.L10:
+ 126              		.align	2
+ 127              	.L9:
+ 128 007c 40420F00 		.word	1000000
+ 129 0080 00006842 		.word	1114112000
+ 130              		.cfi_endproc
+ 131              	.LFE129:
+ 133              		.global	timeDelayUltras
+ 134              		.section	.rodata.timeDelayUltras,"a",%progbits
+ 135              		.align	2
+ARM GAS  /tmp/ccHqXe9y.s 			page 4
+
+
+ 138              	timeDelayUltras:
+ 139 0000 00000000 		.space	4
+ 140              		.text
+ 141              	.Letext0:
+ 142              		.file 2 "/opt/gcc-arm-none-eabi-5_4-2016q3/arm-none-eabi/include/machine/_default_types.h"
+ 143              		.file 3 "/opt/gcc-arm-none-eabi-5_4-2016q3/arm-none-eabi/include/sys/_stdint.h"
+ 144              		.file 4 "Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM4F/portmacro.h"
+ 145              		.file 5 "Inc/ultrasonic.h"
+ 146              		.file 6 "Drivers/CMSIS/Include/core_cm4.h"
+ 147              		.file 7 "Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_gpio.h"
+ 148              		.file 8 "Middlewares/Third_Party/FreeRTOS/Source/include/task.h"
+ARM GAS  /tmp/ccHqXe9y.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 ultrasonic.c
+     /tmp/ccHqXe9y.s:22     .text.readUltrasonic:00000000 $t
+     /tmp/ccHqXe9y.s:27     .text.readUltrasonic:00000000 readUltrasonic
+     /tmp/ccHqXe9y.s:128    .text.readUltrasonic:0000007c $d
+     /tmp/ccHqXe9y.s:138    .rodata.timeDelayUltras:00000000 timeDelayUltras
+     /tmp/ccHqXe9y.s:135    .rodata.timeDelayUltras:00000000 $d
+                     .debug_frame:00000010 $d
+
+UNDEFINED SYMBOLS
+HAL_GPIO_WritePin
+vTaskDelay
+HAL_GPIO_ReadPin
